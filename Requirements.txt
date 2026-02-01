@@ -1,0 +1,4 @@
+flask
+docling
+haystack-ai
+groq
