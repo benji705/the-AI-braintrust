@@ -37,7 +37,7 @@ pipe.add_component("retriever", retriever)
 pipe.add_component("reader", reader)
 pipe.connect("retriever", "reader.documents")
 
-print("✅ IA prête et connectée au contrat.")
+print("IA prête et connectée au contrat.")
 
 # --- ROUTE PRINCIPALE ---
 
@@ -89,7 +89,7 @@ def ask():
                                question=user_question)
 
     except Exception as e:
-        print(f"❌ ERREUR DÉTAILLÉE : {e}")
+        print(f" ERREUR DÉTAILLÉE : {e}")
         return render_template('index.html', explication=f"Erreur technique : contactez l'assistance pour plus de renseignement.")
 if __name__ == '__main__':
     app.run(debug=False, port=5000)
