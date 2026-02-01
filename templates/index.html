@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expert Assur'IA - Analyse de Contrat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a365d; 
+            --secondary: #3182ce;
+            --accent: #48bb78;
+            --bg: #f8fafc;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
+            background-attachment: fixed;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #2d3748;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 750px;
+            margin: 20px;
+        }
+
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { font-size: 32px; font-weight: 700; color: var(--primary); margin: 0; }
+        .header p { color: #718096; margin-top: 8px; font-size: 16px; }
+
+        .search-area { margin-bottom: 30px; }
+        input { 
+            width: 100%; 
+            padding: 16px 20px; 
+            border: 2px solid #e2e8f0; 
+            border-radius: 12px; 
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input:focus { border-color: var(--secondary); }
+
+        button { 
+            width: 100%; 
+            padding: 16px; 
+            background: var(--secondary); 
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: 600; 
+            font-size: 16px;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: transform 0.1s, background 0.2s;
+        }
+        button:hover { background: #2b6cb0; }
+        button:active { transform: scale(0.98); }
+
+        /* --- NOUVEAU DESIGN : BOT + PARAGRAPHE --- */
+        .result-container {
+            margin-top: 35px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bot-bubble {
+            background: #ebf8ff;
+            border-radius: 18px;
+            padding: 24px;
+            border-left: 6px solid var(--secondary);
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .bot-header {
+            font-weight: 800;
+            color: #2b6cb0;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .explication-text {
+            font-size: 18px;
+            line-height: 1.6;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .source-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .source-header {
+            background: var(--primary);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: 0.5px;
+        }
+
+        .source-content {
+            padding: 25px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #4a5568;
+            line-height: 1.7;
+            background: #fffaf0; /* Teinte papier léger */
+            white-space: pre-wrap; /* Garde la structure des tableaux */
+        }
+
+        .source-footer {
+            padding: 10px 20px;
+            background: #f8fafc;
+            text-align: right;
+            border-top: 1px solid #edf2f7;
+            font-size: 11px;
+            color: #a0aec0;
+        }
+
+        .footer { text-align: center; margin-top: 30px; font-size: 12px; color: rgba(255,255,255,0.6); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Expert Assur'IA</h1>
+            <p>Analyse intelligente du contrat <strong>LOCPLUS</strong></p>
+        </div>
+
+        <form action="/ask" method="post" class="search-area">
+            <input type="text" name="question" placeholder="Posez une question sur vos garanties..." required value="{{ question if question else '' }}">
+            <button type="submit">Lancer l'analyse</button>
+        </form>
+
+        {% if explication %}
+        <div class="result-container">
+            
+            <div class="bot-bubble">
+                <div class="bot-header">
+                    <span>🤖</span> L'AVIS DE VOTRE EXPERT
+                </div>
+                <div class="explication-text">
+                    {{ explication | safe }}
+                </div>
+            </div>
+
+            {% if paragraphe %}
+            <div class="source-card">
+                <div class="source-header">
+                    <span>📄 EXTRAIT OFFICIEL - {{ section if section else "CLAUSES GÉNÉRALES" }}</span>
+                    <span>PAGE {{ page if page != '?' else 'N/A' }}</span>
+                </div>
+                <div class="source-content">
+                    {{ paragraphe }}
+                </div>
+                <div class="source-footer">
+                    Document : Contrat Assurance N°1029345
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+        {% endif %}
+
+        <div class="footer">Technologie RAG (Docling + Haystack) • Version 1.3</div>
+    </div>
+</body>
+</html>
